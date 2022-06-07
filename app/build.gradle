@@ -44,12 +44,20 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
+
     namespace 'vtsen.hashnode.dev.simplegooglemapapp'
+
+    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+        kotlinOptions {
+            freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
+        }
+    }
+
 }
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'androidx.core:core-ktx:1.8.0'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.1'
     implementation 'androidx.activity:activity-compose:1.4.0'
 
@@ -58,9 +66,16 @@ dependencies {
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
 
-    implementation "com.google.accompanist:accompanist-systemuicontroller:0.24.2-alpha"
+    def accompanist_version = "0.24.2-alpha"
+    implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanist_version"
+    // required by location permission request
+    implementation "com.google.accompanist:accompanist-permissions:$accompanist_version"
 
+    // required by google map compose
     implementation 'com.google.maps.android:maps-compose:2.1.1'
     implementation 'com.google.android.gms:play-services-maps:18.0.2'
-    implementation "androidx.compose.foundation:foundation:1.2.0-beta02"
+    implementation "androidx.compose.foundation:foundation:1.2.0-beta03"
+
+    // required by get the last known location
+    implementation 'com.google.android.gms:play-services-location:19.0.1'
 }
