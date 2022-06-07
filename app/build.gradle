@@ -74,7 +74,7 @@ dependencies {
     // required by google map compose
     implementation 'com.google.maps.android:maps-compose:2.1.1'
     implementation 'com.google.android.gms:play-services-maps:18.0.2'
-    implementation "androidx.compose.foundation:foundation:1.2.0-beta03"
+    implementation "androidx.compose.foundation:foundation:$compose_version"
 
     // required by get the last known location
     implementation 'com.google.android.gms:play-services-location:19.0.1'
