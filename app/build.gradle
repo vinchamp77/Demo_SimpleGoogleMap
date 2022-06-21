@@ -75,5 +75,5 @@ dependencies {
     implementation "androidx.compose.foundation:foundation:$compose_version"
 
     // required by get the last known location
-    implementation 'com.google.android.gms:play-services-location:19.0.1'
+    implementation 'com.google.android.gms:play-services-location:20.0.0'
 }

@@ -42,8 +42,12 @@ fun MapScreen(fusedLocationProviderClient: FusedLocationProviderClient) {
         LocationPermissionsAndSettingDialogs(
             updateCurrentLocation = {
                 requestLocationUpdate = false
-                LocationUtils.requestLocationResultCallback(fusedLocationProviderClient) {
-                    currentLocation = it.lastLocation
+                LocationUtils.requestLocationResultCallback(fusedLocationProviderClient) { locationResult ->
+
+                    locationResult.lastLocation?.let { location ->
+                        currentLocation = location
+                    }
+
                 }
             }
         )
