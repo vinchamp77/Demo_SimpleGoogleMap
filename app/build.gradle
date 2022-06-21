@@ -68,8 +68,6 @@ dependencies {
 
     def accompanist_version = "0.24.2-alpha"
     implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanist_version"
-    // required by location permission request
-    implementation "com.google.accompanist:accompanist-permissions:$accompanist_version"
 
     // required by google map compose
     implementation 'com.google.maps.android:maps-compose:2.1.1'

@@ -1,6 +1,5 @@
 package vtsen.hashnode.dev.simplegooglemapapp.ui.screens
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.location.Location
 import androidx.compose.foundation.layout.*
@@ -13,54 +12,42 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.MultiplePermissionsState
-import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.maps.android.compose.*
 import vtsen.hashnode.dev.simplegooglemapapp.R
-import vtsen.hashnode.dev.simplegooglemapapp.ui.getDefaultLocation
-import vtsen.hashnode.dev.simplegooglemapapp.ui.getPosition
-import vtsen.hashnode.dev.simplegooglemapapp.ui.requestLocationResultCallback
+import vtsen.hashnode.dev.simplegooglemapapp.ui.LocationUtils
 
-@OptIn(ExperimentalPermissionsApi::class)
 @SuppressLint("MissingPermission")
 @Composable
 fun MapScreen(fusedLocationProviderClient: FusedLocationProviderClient) {
 
-    var currentLocation by remember { mutableStateOf(getDefaultLocation()) }
+    var currentLocation by remember { mutableStateOf(LocationUtils.getDefaultLocation()) }
 
     val cameraPositionState = rememberCameraPositionState()
     cameraPositionState.position = CameraPosition.fromLatLngZoom(
-        getPosition(currentLocation), 12f)
+        LocationUtils.getPosition(currentLocation), 12f)
 
-    var requestLocationPermission by remember { mutableStateOf(true)}
-    val locationPermissionsState = rememberMultiplePermissionsState(
-        listOf(
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.ACCESS_FINE_LOCATION,
-        )
+    var requestLocationUpdate by remember { mutableStateOf(true)}
+
+    MyGoogleMap(
+        currentLocation,
+        cameraPositionState,
+        onGpsIconClick = {
+            requestLocationUpdate = true
+        }
     )
 
-    MyGoogleMap(currentLocation, cameraPositionState, onGpsIconClick = {
-        requestLocationPermission = true
-    })
-
-    DebugView(cameraPositionState)
-
-    RequestLocationPermissions(
-        requestLocationPermission,
-        locationPermissionsState,
-
-        onAllPermissionsGranted = {
-            requestLocationPermission = false
-
-            requestLocationResultCallback(fusedLocationProviderClient) {
-                currentLocation = it.lastLocation
+    if(requestLocationUpdate) {
+        LocationPermissionsAndSettingDialogs(
+            updateCurrentLocation = {
+                requestLocationUpdate = false
+                LocationUtils.requestLocationResultCallback(fusedLocationProviderClient) {
+                    currentLocation = it.lastLocation
+                }
             }
-        },
-    )
+        )
+    }
 }
 
 @Composable
@@ -81,13 +68,14 @@ private fun MyGoogleMap(
         uiSettings = mapUiSettings,
     ) {
         Marker(
-            state = MarkerState(position = getPosition(currentLocation)),
+            state = MarkerState(position = LocationUtils.getPosition(currentLocation)),
             title = "Current Position"
         )
     }
 
     GpsIconButton(onIconClick = onGpsIconClick)
 
+    DebugOverlay(cameraPositionState)
 }
 
 @Composable
@@ -114,7 +102,7 @@ private fun GpsIconButton(onIconClick: () -> Unit) {
 }
 
 @Composable
-private fun DebugView(
+private fun DebugOverlay(
     cameraPositionState: CameraPositionState,
 ) {
     Column(
@@ -134,21 +122,4 @@ private fun DebugView(
     }
 }
 
-@OptIn(ExperimentalPermissionsApi::class)
-@Composable
-private fun RequestLocationPermissions(
-    requestLocationPermission: Boolean,
-    locationPermissionsState: MultiplePermissionsState,
-    onAllPermissionsGranted: () -> Unit,
-) {
-    if(!requestLocationPermission) return
-
-    if (locationPermissionsState.allPermissionsGranted) {
-        onAllPermissionsGranted()
-    } else {
-        LaunchedEffect(key1 = Unit) {
-            locationPermissionsState.launchMultiplePermissionRequest()
-        }
-    }
-}
 
