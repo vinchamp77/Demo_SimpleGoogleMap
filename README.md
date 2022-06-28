@@ -9,8 +9,8 @@ This app shows how to implement simple Google map using the Google map compose l
 
 ## Tech Stack
 - Jetpack Compose
-- Goole Map Compose Library
-- Secret Gradle Plugin
+- [Google Map Compose Library](https://github.com/googlemaps/android-maps-compose)
+- [Secret Gradle Plugin](https://github.com/google/secrets-gradle-plugin)
 - Permission Request
 - Location Setting Request
 
