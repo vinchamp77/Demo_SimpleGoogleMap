@@ -12,13 +12,13 @@ import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
+import com.google.android.gms.location.Priority
 
 @Composable
 fun LocationSettingDialog(
     onSuccess: () -> Unit,
     onFailure: () -> Unit,
 ) {
-
     val context: Context = LocalContext.current
 
     val enableLocationSettingLauncher = rememberLauncherForActivityResult(
@@ -32,12 +32,13 @@ fun LocationSettingDialog(
         }
     }
 
-    val locationRequest = LocationRequest.create()
-    val locationRequestBuilder =
-        LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
-    val settingsClient = LocationServices.getSettingsClient(context)
-    val locationSettingsResponseTask =
-        settingsClient.checkLocationSettings(locationRequestBuilder.build())
+    val locationRequest = LocationRequest.create().apply {
+        priority = Priority.PRIORITY_HIGH_ACCURACY
+    }
+    val locationRequestBuilder = LocationSettingsRequest.Builder()
+        .addLocationRequest(locationRequest)
+    val locationSettingsResponseTask = LocationServices.getSettingsClient(context)
+        .checkLocationSettings(locationRequestBuilder.build())
 
     locationSettingsResponseTask.addOnSuccessListener {
         onSuccess()
@@ -46,7 +47,8 @@ fun LocationSettingDialog(
     locationSettingsResponseTask.addOnFailureListener { exception ->
         if (exception is ResolvableApiException){
             try {
-                val intentSenderRequest = IntentSenderRequest.Builder(exception.resolution).build()
+                val intentSenderRequest =
+                    IntentSenderRequest.Builder(exception.resolution).build()
                 enableLocationSettingLauncher.launch(intentSenderRequest)
 
             } catch (sendEx: IntentSender.SendIntentException) {

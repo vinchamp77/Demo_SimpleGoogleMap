@@ -43,10 +43,11 @@ object LocationUtils {
             }
         }
 
-        val locationRequest = LocationRequest.create()
-        locationRequest.interval = 0
-        locationRequest.fastestInterval = 0
-        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        val locationRequest = LocationRequest.create().apply {
+            interval = 0
+            fastestInterval = 0
+            priority = Priority.PRIORITY_HIGH_ACCURACY
+        }
         Looper.myLooper()?.let { looper ->
             fusedLocationProviderClient.requestLocationUpdates(
                 locationRequest,
