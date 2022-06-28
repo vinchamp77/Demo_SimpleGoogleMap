@@ -32,12 +32,12 @@ fun LocationSettingDialog(
         }
     }
 
-    val locationRequest = LocationRequest.create().apply {
-        priority = LocationRequest.PRIORITY_LOW_POWER
-    }
-    val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
+    val locationRequest = LocationRequest.create()
+    val locationRequestBuilder =
+        LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
     val settingsClient = LocationServices.getSettingsClient(context)
-    val locationSettingsResponseTask = settingsClient.checkLocationSettings(builder.build())
+    val locationSettingsResponseTask =
+        settingsClient.checkLocationSettings(locationRequestBuilder.build())
 
     locationSettingsResponseTask.addOnSuccessListener {
         onSuccess()
