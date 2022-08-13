@@ -16,4 +16,4 @@ This app shows how to implement simple Google map using the Google map compose l
 
 
 ## Articles
-- Simple Google Map App - Jetpack Compose
+- [Simple Google Map App - Jetpack Compose](https://vtsen.hashnode.dev/simple-google-map-app-jetpack-compose)
