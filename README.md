@@ -5,7 +5,7 @@ This app shows how to implement simple Google map using the Google map compose l
 ![](screenshots/Simple_Google_Map_App_Jetpack_Compose_01.gif)
 
 ## Requirements
-- Android Studio Chipmunk or later
+- Android Studio Dolphin or later
 - [Add MAPS_API_KEY in `local.properties`](https://vtsen.hashnode.dev/simple-google-map-app-jetpack-compose#heading-3-add-mapsapikey-in-localproperties)
 
 ## Tech Stack
